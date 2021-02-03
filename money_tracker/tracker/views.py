@@ -12,6 +12,9 @@ class SpendingList(APIView):
             spendings = Spending.objects.all().filter(currency=currency_filter)
         else:
             spendings = Spending.objects.all()
+        order_param = request.GET.get('order', False)
+        if order_param:
+            spendings = spendings.order_by(order_param)
         serializer = SpendingSerializer(spendings, many=True)
         return Response(serializer.data)
 
