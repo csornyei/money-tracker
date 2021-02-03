@@ -7,8 +7,11 @@ from tracker.serializers import SpendingSerializer
 
 class SpendingList(APIView):
     def get(self, request, format=None):
-        print(request)
-        spendings = Spending.objects.all()
+        currency_filter = request.GET.get('currency', False)
+        if currency_filter:
+            spendings = Spending.objects.all().filter(currency=currency_filter)
+        else:
+            spendings = Spending.objects.all()
         serializer = SpendingSerializer(spendings, many=True)
         return Response(serializer.data)
 
